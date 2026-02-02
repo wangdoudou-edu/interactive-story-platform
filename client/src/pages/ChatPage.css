@@ -1,0 +1,203 @@
+.chat-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--bg-primary);
+}
+
+/* Header */
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+}
+
+.user-role {
+    font-size: 1rem;
+}
+
+.user-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.btn-logout {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: var(--error);
+    border-color: var(--error);
+    color: white;
+}
+
+.panel-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.panel-toggle:hover {
+    background: var(--primary);
+}
+
+/* Main Area */
+.chat-main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.chat-main>.side-panels {
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    min-width: 360px;
+}
+
+.side-panels>* {
+    flex: 1;
+    min-height: 0;
+}
+
+.side-panels>*:first-child {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Task Flow Container */
+.task-flow-container {
+    width: 320px;
+    min-width: 320px;
+    height: 100%;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+/* Task Flow Toggle */
+.task-flow-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.task-flow-toggle:hover {
+    background: var(--primary);
+}
+
+.task-flow-toggle.active {
+    background: rgba(102, 126, 234, 0.2);
+    color: var(--primary);
+}
+
+/* Teacher Dashboard Button */
+.btn-dashboard {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}

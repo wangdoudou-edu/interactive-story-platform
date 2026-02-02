@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+model User {
+  id            String         @id @default(uuid())
+  username      String         @unique
+  password      String
+  name          String
+  role          Role           @default(STUDENT)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessions      Session[]
+  conversations Conversation[]
+  projects      Project[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AIConfig {
+  id           String    @id @default(uuid())
+  name         String
+  provider     String
+  model        String
+  systemPrompt String?
+  avatar       String?
+  description  String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  messages     Message[]
+}
+
+model Conversation {
+  id             String         @id @default(uuid())
+  userId         String
+  title          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages       Message[]
+  notes          Note[]
+  drafts         Draft[]
+  draftHistories DraftHistory[]
+  project        Project?
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  role           String
+  content        String
+  aiConfigId     String?
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  aiConfig       AIConfig?    @relation(fields: [aiConfigId], references: [id])
+  annotations    Annotation[]
+}
+
+// 内联批注 - 直接在 AI 回答上的批注
+model Annotation {
+  id           String   @id @default(uuid())
+  messageId    String
+  userId       String
+  selectedText String
+  type         String   // KNOWLEDGE, DELETE, COMMENT
+  label        String?  // 批注标签: DOUBT, INSPIRATION, QUESTION, NOTE
+  note         String?  // 批注内容
+  startOffset  Int
+  endOffset    Int
+  isDeleted    Boolean  @default(false) // 是否标记删除（置灰）
+  createdAt    DateTime @default(now())
+  message      Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+// 笔记区 - 存放知识点
+model Note {
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  content        String       // 富文本内容 (HTML/JSON)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+// 草稿区 - 当前工作区
+model Draft {
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  content        String       // 富文本内容
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+// 草稿历史 - 每轮快照
+model DraftHistory {
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  roundNumber    Int          // 第几轮
+  content        String       // 快照内容
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+// 活动日志 - 用于研究分析
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String   // ANNOTATE, DELETE_TEXT, ADD_KNOWLEDGE, ORGANIZE, TASK_START, TASK_COMPLETE, PROMPT_ITERATE, COMPARE_AI_OUTPUTS, SELECT_AI_OUTPUT, REJECT_AI_OUTPUT, TEACHER_REMINDER
+  details   String?  // JSON string with action details
+  createdAt DateTime @default(now())
+}
+
+// 任务模板 - 教师预设的互动叙事设计任务
+model TaskTemplate {
+  id          String   @id @default(uuid())
+  name        String   // 模板名称
+  description String?  // 模板描述
+  tasks       Json     // 任务结构 [{phase, name, description, softPrompts, suggestedAICount}]
+  createdBy   String   // 创建者（教师）ID
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projects    Project[]
+}
+
+// 项目 - 学生的互动叙事设计项目
+model Project {
+  id             String       @id @default(uuid())
+  userId         String
+  templateId     String
+  conversationId String?      @unique // 关联的对话
+  title          String?
+  currentPhase   Int          @default(1)
+  currentTask    Int          @default(0)
+  status         String       @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template       TaskTemplate @relation(fields: [templateId], references: [id])
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  progress       TaskProgress[]
+}
+
+// 任务进度 - 每个子任务的完成情况
+model TaskProgress {
+  id               String   @id @default(uuid())
+  projectId        String
+  taskIndex        Int      // 任务索引
+  status           String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  studentContent   String?  // 学生手写内容
+  aiContent        String?  // AI生成内容
+  aiRatio          Float    @default(0) // AI占比 = AI内容 / (学生+AI)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  lastActiveAt     DateTime @default(now())
+  
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@unique([projectId, taskIndex])
+}
+
+// 教师提醒 - 私信系统
+model TeacherReminder {
+  id          String    @id @default(uuid())
+  teacherId   String
+  studentId   String
+  projectId   String?   // 关联的项目
+  message     String
+  type        String    @default("GENERAL") // GENERAL, ENCOURAGE, AI_WARNING, IDLE_WARNING
+  sentAt      DateTime  @default(now())
+  readAt      DateTime?
+}
