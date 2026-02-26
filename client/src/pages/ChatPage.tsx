@@ -35,7 +35,7 @@ export default function ChatPage() {
                 <div className="header-left">
                     <div className="logo">
                         <span className="logo-icon">🤖</span>
-                        <span className="logo-text">AI-LOP</span>
+                        <span className="logo-text">AIMind Studio</span>
                     </div>
                 </div>
 

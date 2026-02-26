@@ -42,7 +42,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                 <div className="login-header">
                     <div className="login-logo">
                         <span className="logo-icon">🤖</span>
-                        <span className="logo-text">AI-LOP</span>
+                        <span className="logo-text">AIMind Studio</span>
                     </div>
                     <h1>{t('login.subtitle')}</h1>
                     <p>{t('login.features')}</p>

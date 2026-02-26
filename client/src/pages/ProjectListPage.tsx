@@ -81,7 +81,7 @@ export default function ProjectListPage() {
             <header className="pl-header">
                 <div className="pl-header-left">
                     <span className="pl-logo-icon">🤖</span>
-                    <span className="pl-logo-text">AI-LOP</span>
+                    <span className="pl-logo-text">AIMind Studio</span>
                     <span className="pl-tagline">{t('chatPage.logoSubtitle')}</span>
                 </div>
                 <div className="pl-header-right">

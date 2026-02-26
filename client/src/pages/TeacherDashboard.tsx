@@ -174,7 +174,7 @@ export default function TeacherDashboard() {
             {/* 顶部导航 */}
             <header className="dashboard-header">
                 <div className="header-left">
-                    <span className="logo">🎓 AI-LOP 教师控制台</span>
+                    <span className="logo">🎓 AIMind Studio 教师控制台</span>
                 </div>
                 <div className="header-right">
                     <span className="user-name">👨‍🏫 {user?.name}</span>
