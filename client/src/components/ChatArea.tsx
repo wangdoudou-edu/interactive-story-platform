@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChatStore } from '../stores/chatStore';
 import MessageList from './MessageList';
 import AISelector from './AISelector';
@@ -15,6 +16,7 @@ interface UploadedFile {
 }
 
 export default function ChatArea() {
+    const { t } = useTranslation();
     const {
         currentConversation,
         messages,
@@ -97,29 +99,29 @@ export default function ChatArea() {
                 <div className="welcome-screen">
                     <div className="welcome-content">
                         <div className="welcome-icon">🤖</div>
-                        <h1>欢迎使用 AI-LOP</h1>
-                        <p>AI 协作学习平台 - 多AI对话 · 智能批注 · 创意整合</p>
+                        <h1>{t('chatArea.welcomeTitle')}</h1>
+                        <p>{t('chatArea.welcomeSubtitle')}</p>
 
                         <div className="features">
                             <div className="feature">
                                 <span className="feature-icon">💬</span>
                                 <div className="feature-text">
-                                    <h3>多 AI 同时对话</h3>
-                                    <p>支持同时与多个 AI 进行对话，获取不同视角的回答</p>
+                                    <h3>{t('chatArea.feature1Title')}</h3>
+                                    <p>{t('chatArea.feature1Desc')}</p>
                                 </div>
                             </div>
                             <div className="feature">
                                 <span className="feature-icon">📝</span>
                                 <div className="feature-text">
-                                    <h3>智能批注</h3>
-                                    <p>对 AI 回答进行标注和评价，记录你的思考过程</p>
+                                    <h3>{t('chatArea.feature2Title')}</h3>
+                                    <p>{t('chatArea.feature2Desc')}</p>
                                 </div>
                             </div>
                             <div className="feature">
                                 <span className="feature-icon">✨</span>
                                 <div className="feature-text">
-                                    <h3>创意整合</h3>
-                                    <p>将多个 AI 的观点整合，激发创新灵感</p>
+                                    <h3>{t('chatArea.feature3Title')}</h3>
+                                    <p>{t('chatArea.feature3Desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +161,7 @@ export default function ChatArea() {
                     <textarea
                         ref={textareaRef}
                         className="chat-input"
-                        placeholder="输入你的问题... (Shift+Enter 换行)"
+                        placeholder={t('chatArea.placeholder')}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}

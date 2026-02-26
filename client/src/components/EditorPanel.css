@@ -130,3 +130,35 @@
     flex-wrap: wrap;
     gap: 0.5rem;
 }
+
+/* Knowledge Cards Section */
+.knowledge-cards-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.3);
+}
+
+/* Drag & Drop */
+.draft-panel.drag-over {
+    outline: 2px dashed var(--accent-warm);
+    outline-offset: -2px;
+    background: rgba(240, 168, 86, 0.05);
+}
+
+.drop-zone-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem;
+    background: var(--primary-light);
+    border-bottom: 1px solid rgba(91, 141, 239, 0.2);
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 500;
+    animation: pulse 1.5s infinite;
+}

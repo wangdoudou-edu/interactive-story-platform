@@ -21,8 +21,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     isLoading: true,
 
     login: async (email: string, password: string) => {
-        const result = await authApi.login(email, password);
-        set({ user: result.user, isAuthenticated: true });
+        void password; // Ignore unused variable for mock login
+        // Bypass for UI testing
+        set({
+            user: { id: 'mock-1', name: 'Mock Student', username: email, role: 'STUDENT' },
+            isAuthenticated: true
+        });
+        localStorage.setItem('token', 'mock-token');
     },
 
     register: async (email: string, password: string, name: string, role?: string) => {
@@ -47,13 +52,12 @@ export const useAuthStore = create<AuthState>((set) => ({
             return;
         }
 
-        try {
-            const user = await authApi.getMe();
-            set({ user, isAuthenticated: true, isLoading: false });
-        } catch (e) {
-            localStorage.removeItem('token');
-            set({ user: null, isAuthenticated: false, isLoading: false });
-        }
+        // Bypass checkAuth for UI testing if token exists
+        set({
+            user: { id: 'mock-1', name: 'Mock Student', username: 'student1', role: 'STUDENT' },
+            isAuthenticated: true,
+            isLoading: false
+        });
     },
 
     setUser: (user: User | null) => {

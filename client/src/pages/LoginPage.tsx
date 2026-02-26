@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { authApi } from '../services/api';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../stores/authStore';
 import './LoginPage.css';
 
 interface LoginPageProps {
@@ -7,10 +8,13 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
+    const { t } = useTranslation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const { login } = useAuthStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,10 +22,10 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         setLoading(true);
 
         try {
-            await authApi.login(username, password);
+            await login(username, password);
             onLoginSuccess();
         } catch (err: any) {
-            setError(err.message || '登录失败');
+            setError(err.message || t('login.error'));
         } finally {
             setLoading(false);
         }
@@ -40,23 +44,23 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                         <span className="logo-icon">🤖</span>
                         <span className="logo-text">AI-LOP</span>
                     </div>
-                    <h1>AI 协作学习平台</h1>
-                    <p>多AI对话 · 智能批注 · 创意整合</p>
+                    <h1>{t('login.subtitle')}</h1>
+                    <p>{t('login.features')}</p>
                 </div>
 
                 <div className="login-card">
                     <div className="login-title">
-                        <h2>账号登录</h2>
-                        <p className="login-hint">请使用教师分配的账号登录</p>
+                        <h2>{t('login.title')}</h2>
+                        <p className="login-hint">{t('login.hint')}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="login-form">
                         <div className="form-group">
-                            <label>用户名</label>
+                            <label>{t('login.usernameLabel')}</label>
                             <input
                                 type="text"
                                 className="input"
-                                placeholder="请输入用户名"
+                                placeholder={t('login.usernamePlaceholder')}
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
@@ -64,11 +68,11 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                         </div>
 
                         <div className="form-group">
-                            <label>密码</label>
+                            <label>{t('login.passwordLabel')}</label>
                             <input
                                 type="password"
                                 className="input"
-                                placeholder="请输入密码"
+                                placeholder={t('login.passwordPlaceholder')}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
@@ -85,14 +89,14 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                             {loading ? (
                                 <span className="loading-spinner"></span>
                             ) : (
-                                '登录'
+                                t('login.submitBtn')
                             )}
                         </button>
                     </form>
                 </div>
 
                 <div className="login-footer">
-                    <p>开启你的 AI 协作学习之旅</p>
+                    <p>{t('login.footer')}</p>
                 </div>
             </div>
         </div>

@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from './stores/authStore';
 import LoginPage from './pages/LoginPage';
 import ChatPage from './pages/ChatPage';
+import ProjectListPage from './pages/ProjectListPage';
 import TeacherDashboard from './pages/TeacherDashboard';
 import './index.css';
 
 function AppContent() {
+  const { t } = useTranslation();
   const { isAuthenticated, isLoading, checkAuth, user } = useAuthStore();
 
   useEffect(() => {
@@ -19,7 +22,7 @@ function AppContent() {
         <div className="loading-content">
           <span className="loading-icon">🤖</span>
           <span className="loading-spinner"></span>
-          <span>加载中...</span>
+          <span>{t('common.loading')}</span>
         </div>
       </div>
     );
@@ -31,8 +34,8 @@ function AppContent() {
         path="/login"
         element={
           isAuthenticated
-            ? <Navigate to="/" replace />
-            : <LoginPage onLoginSuccess={() => window.location.href = '/'} />
+            ? <Navigate to="/projects" replace />
+            : <LoginPage onLoginSuccess={() => window.location.href = '/projects'} />
         }
       />
       <Route
@@ -44,10 +47,26 @@ function AppContent() {
         }
       />
       <Route
-        path="/"
+        path="/projects"
+        element={
+          isAuthenticated
+            ? <ProjectListPage />
+            : <Navigate to="/login" replace />
+        }
+      />
+      <Route
+        path="/chat"
         element={
           isAuthenticated
             ? <ChatPage />
+            : <Navigate to="/login" replace />
+        }
+      />
+      <Route
+        path="/"
+        element={
+          isAuthenticated
+            ? <Navigate to="/projects" replace />
             : <Navigate to="/login" replace />
         }
       />

@@ -1,0 +1,8 @@
+﻿
+> client@0.0.0 build
+> tsc -b && vite build
+
+src/components/TaskFlowPanel.tsx(6,1): error TS6133: 'TaskDefinition' is declared but its value is never read.
+src/components/TaskFlowPanel.tsx(24,39): error TS6133: 'conversationId' is declared but its value is never read.
+src/components/TaskFlowPanel.tsx(73,11): error TS6133: 'handleDeleteChat' is declared but its value is never read.
+src/stores/authStore.ts(23,34): error TS6133: 'password' is declared but its value is never read.

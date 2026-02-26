@@ -1,4 +1,5 @@
 import { useEditor, EditorContent } from '@tiptap/react';
+import { useTranslation } from 'react-i18next';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import './RichTextEditor.css';
@@ -13,13 +14,15 @@ interface RichTextEditorProps {
 export default function RichTextEditor({
     content,
     onChange,
-    placeholder = '开始输入...',
+    placeholder,
     readOnly = false
 }: RichTextEditorProps) {
+    const { t } = useTranslation();
+    const finalPlaceholder = placeholder || t('richTextEditor.placeholder');
     const editor = useEditor({
         extensions: [
             StarterKit,
-            Placeholder.configure({ placeholder })
+            Placeholder.configure({ placeholder: finalPlaceholder })
         ],
         content,
         editable: !readOnly,
@@ -37,35 +40,35 @@ export default function RichTextEditor({
                     <button
                         onClick={() => editor.chain().focus().toggleBold().run()}
                         className={editor.isActive('bold') ? 'active' : ''}
-                        title="粗体"
+                        title={t('richTextEditor.bold')}
                     >
                         <strong>B</strong>
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleItalic().run()}
                         className={editor.isActive('italic') ? 'active' : ''}
-                        title="斜体"
+                        title={t('richTextEditor.italic')}
                     >
                         <em>I</em>
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                         className={editor.isActive('heading', { level: 3 }) ? 'active' : ''}
-                        title="标题"
+                        title={t('richTextEditor.heading')}
                     >
                         H
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
                         className={editor.isActive('bulletList') ? 'active' : ''}
-                        title="列表"
+                        title={t('richTextEditor.list')}
                     >
                         •
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleBlockquote().run()}
                         className={editor.isActive('blockquote') ? 'active' : ''}
-                        title="引用"
+                        title={t('richTextEditor.quote')}
                     >
                         "
                     </button>

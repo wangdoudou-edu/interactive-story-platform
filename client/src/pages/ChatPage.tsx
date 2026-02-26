@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useChatStore } from '../stores/chatStore';
 import { useAuthStore } from '../stores/authStore';
-import ChatSidebar from '../components/ChatSidebar';
 import ChatArea from '../components/ChatArea';
 import NotePanel from '../components/NotePanel';
 import DraftPanel from '../components/DraftPanel';
@@ -10,12 +10,11 @@ import TaskFlowPanel from '../components/TaskFlowPanel';
 import './ChatPage.css';
 
 export default function ChatPage() {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { user, logout } = useAuthStore();
     const { loadConversations, loadAIConfigs, currentConversation } = useChatStore();
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [panelsCollapsed, setPanelsCollapsed] = useState(false);
-    const [showTaskFlow, setShowTaskFlow] = useState(true);
 
     useEffect(() => {
         loadConversations();
@@ -26,16 +25,14 @@ export default function ChatPage() {
         await logout();
     };
 
+    const toggleLanguage = () => {
+        i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en');
+    };
+
     return (
         <div className="chat-page">
             <header className="chat-header">
                 <div className="header-left">
-                    <button
-                        className="sidebar-toggle"
-                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                    >
-                        <span className="toggle-icon">{sidebarCollapsed ? '☰' : '✕'}</span>
-                    </button>
                     <div className="logo">
                         <span className="logo-icon">🤖</span>
                         <span className="logo-text">AI-LOP</span>
@@ -43,26 +40,22 @@ export default function ChatPage() {
                 </div>
 
                 <div className="header-right">
+                    <button className="pl-btn-lang" onClick={toggleLanguage} style={{ marginRight: '12px', padding: '4px 12px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.2)', background: 'transparent', color: '#fff', cursor: 'pointer', transition: 'all 0.2s' }}>
+                        {i18n.language === 'en' ? '中' : 'EN'}
+                    </button>
                     {user?.role === 'TEACHER' && (
                         <button
                             className="btn-dashboard"
                             onClick={() => navigate('/teacher')}
-                            title="教师仪表盘"
+                            title={t('common.dashboard')}
                         >
-                            📊 仪表盘
+                            📊 {t('common.dashboard')}
                         </button>
                     )}
                     <button
-                        className={`task-flow-toggle ${showTaskFlow ? 'active' : ''}`}
-                        onClick={() => setShowTaskFlow(!showTaskFlow)}
-                        title={showTaskFlow ? '隐藏任务流程' : '显示任务流程'}
-                    >
-                        📋
-                    </button>
-                    <button
                         className="panel-toggle"
                         onClick={() => setPanelsCollapsed(!panelsCollapsed)}
-                        title={panelsCollapsed ? '显示笔记/草稿区' : '隐藏笔记/草稿区'}
+                        title={t('chatPage.togglePanels')}
                     >
                         {panelsCollapsed ? '📝' : '✕'}
                     </button>
@@ -71,20 +64,16 @@ export default function ChatPage() {
                         <span className="user-name">{user?.name}</span>
                     </div>
                     <button className="btn-logout" onClick={handleLogout}>
-                        退出
+                        {t('common.logout')}
                     </button>
                 </div>
             </header>
 
             <div className="chat-main">
-                <ChatSidebar collapsed={sidebarCollapsed} />
-
-                {/* 任务流程面板 */}
-                {showTaskFlow && (
-                    <div className="task-flow-container">
-                        <TaskFlowPanel conversationId={currentConversation?.id || null} />
-                    </div>
-                )}
+                {/* 任务流程面板 (左侧边栏) */}
+                <div className="task-flow-container">
+                    <TaskFlowPanel conversationId={currentConversation?.id || null} />
+                </div>
 
                 <ChatArea />
 

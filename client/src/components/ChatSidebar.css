@@ -5,7 +5,7 @@
     flex-direction: column;
     background: var(--bg-secondary);
     border-right: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s var(--ease-spring);
     overflow: hidden;
 }
 
@@ -89,8 +89,21 @@
 }
 
 .conversation-item.active {
-    background: rgba(99, 102, 241, 0.15);
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    background: rgba(91, 141, 239, 0.12);
+    border: 1px solid rgba(91, 141, 239, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.conversation-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--accent-warm), var(--primary));
+    border-radius: 4px 0 0 4px;
 }
 
 .conversation-content {
@@ -144,4 +157,57 @@
 .delete-btn:hover {
     background: var(--error);
     opacity: 1;
+}
+
+/* Message Count Badge */
+.msg-count-badge {
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+/* Back to Projects */
+.back-to-projects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0.75rem 0.75rem;
+    padding: 0.6rem;
+    background: rgba(51, 65, 85, 0.35);
+    border: 1px solid rgba(71, 85, 105, 0.35);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-to-projects:hover {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+}
+
+.back-icon {
+    font-size: 1rem;
+}
+
+.chat-sidebar.collapsed .back-text {
+    display: none;
+}
+
+.chat-sidebar.collapsed .back-to-projects {
+    justify-content: center;
+    padding: 0.6rem 0.4rem;
 }

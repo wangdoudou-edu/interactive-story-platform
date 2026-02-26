@@ -1,273 +1,158 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useProjectStore } from '../stores/projectStore';
-import type { TaskDefinition } from '../services/api';
+import { useChatStore } from '../stores/chatStore';
 import './TaskFlowPanel.css';
 
 interface TaskFlowPanelProps {
     conversationId: string | null;
 }
 
-export default function TaskFlowPanel({ conversationId }: TaskFlowPanelProps) {
+// Fallback tasks for "游戏叙事设计" as requested by user
+const DEFAULT_TASKS = [
+    { name: '概念构思', description: '确定游戏核心玩法与主题' },
+    { name: '世界观设定', description: '构建游戏背后的虚拟世界' },
+    { name: '角色设计', description: '设计主角和关键NPC' },
+    { name: '情节架构', description: '规划游戏的主要剧情线' },
+    { name: '交互机制', description: '设计玩家的互动方式' },
+    { name: '对话编写', description: '撰写游戏内对话和文本' },
+    { name: '整合优化', description: '最终内容的整合与打磨' }
+];
+
+export default function TaskFlowPanel({ }: TaskFlowPanelProps) {
+    const navigate = useNavigate();
     const {
         currentProject,
-        templates,
-        reminders,
-        loading,
         loadProjects,
-        loadTemplates,
-        createProject,
-        loadReminders,
-        markReminderRead,
-        updateTaskProgress
+        loadTemplates
     } = useProjectStore();
+    const {
+        conversations,
+        currentConversation,
+        selectConversation,
+        createConversation
+    } = useChatStore();
 
-    const [showProjectSelect, setShowProjectSelect] = useState(false);
-    const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
-    const [projectTitle, setProjectTitle] = useState('');
+    const [expandedTaskIndex, setExpandedTaskIndex] = useState<number>(0);
 
     useEffect(() => {
         loadProjects();
         loadTemplates();
-        loadReminders();
-    }, [loadProjects, loadTemplates, loadReminders]);
+    }, [loadProjects, loadTemplates]);
 
     // 获取任务列表
-    const tasks: TaskDefinition[] = currentProject?.template?.tasks || [];
+    const projectTasks = currentProject?.template?.tasks || [];
+    const tasks = projectTasks.length > 0 ? projectTasks : DEFAULT_TASKS;
     const progress = currentProject?.progress || [];
 
-    const getTaskStatus = (taskIndex: number) => {
-        const p = progress.find(p => p.taskIndex === taskIndex);
-        return p?.status || 'PENDING';
-    };
-
-    const getTaskAIRatio = (taskIndex: number) => {
-        const p = progress.find(p => p.taskIndex === taskIndex);
-        return p ? Math.round(p.aiRatio * 100) : 0;
-    };
-
-    const handleCreateProject = async () => {
-        if (!selectedTemplateId) return;
-        try {
-            await createProject(selectedTemplateId, projectTitle || undefined, conversationId || undefined);
-            setShowProjectSelect(false);
-            setProjectTitle('');
-        } catch (err) {
-            console.error('Create project failed:', err);
+    // Auto-expand current task if project has one
+    useEffect(() => {
+        if (currentProject?.currentTask !== undefined) {
+            setExpandedTaskIndex(currentProject.currentTask);
         }
+    }, [currentProject?.currentTask]);
+
+    const completedCount = progress.filter(p => p.status === 'COMPLETED').length;
+    const totalCount = tasks.length;
+    const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+    const handleNewChat = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        await createConversation();
     };
 
-    const handleCompleteTask = async (taskIndex: number) => {
-        await updateTaskProgress(taskIndex, { status: 'COMPLETED' });
+    const handleSelectConversation = async (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        await selectConversation(id);
     };
 
-    const handleStartTask = async (taskIndex: number) => {
-        await updateTaskProgress(taskIndex, { status: 'IN_PROGRESS' });
-    };
-
-    // 计算当前阶段
-    const currentTaskIndex = currentProject?.currentTask || 0;
-    const currentTask = tasks[currentTaskIndex];
-    const currentPhase = currentTask?.phase || 1;
-
-    // 按阶段分组任务
-    const phases = tasks.reduce((acc, task, index) => {
-        if (!acc[task.phase]) acc[task.phase] = [];
-        acc[task.phase].push({ ...task, index });
-        return acc;
-    }, {} as Record<number, (TaskDefinition & { index: number })[]>);
-
-    const phaseNames: Record<number, string> = {
-        1: '概念阶段',
-        2: '设计阶段',
-        3: '整合阶段'
-    };
+    // const handleDeleteChat = async (e: React.MouseEvent, id: string) => {
+    //     e.stopPropagation();
+    //     if (confirm(t('chatSidebar.confirmDelete') || '确定要删除这个对话吗？')) {
+    //         await deleteConversation(id);
+    //     }
+    // };
 
     return (
         <div className="task-flow-panel">
-            <div className="task-flow-header">
-                <h3>📋 任务流程</h3>
-                {!currentProject && (
-                    <button
-                        className="btn-start-project"
-                        onClick={() => setShowProjectSelect(true)}
-                    >
-                        开始项目
-                    </button>
-                )}
+            <div className="tf-header">
+                <button
+                    className="btn-tf-back"
+                    onClick={() => navigate('/projects')}
+                >
+                    <span className="back-icon">←</span> 返回项目列表
+                </button>
+                <div className="tf-project-info">
+                    <h2 className="tf-project-title">
+                        {currentProject?.title || currentProject?.template?.name || "游戏叙事设计"}
+                    </h2>
+                    <p className="tf-project-desc">
+                        {currentProject?.template?.description || "探索游戏中的故事讲述技巧与互动叙事"}
+                    </p>
+                </div>
             </div>
 
-            {/* 未读提醒 */}
-            {reminders.length > 0 && (
-                <div className="reminders-section">
-                    {reminders.map(reminder => (
+            <div className="tf-progress-section">
+                <div className="tf-progress-header">
+                    <span>任务流程</span>
+                    <span>{completedCount}/{totalCount}</span>
+                </div>
+                <div className="tf-progress-bar">
+                    <div className="tf-progress-fill" style={{ width: `${progressPercent}%` }} />
+                </div>
+            </div>
+
+            <div className="tf-tasks-list">
+                {tasks.map((task, index) => {
+                    const isExpanded = expandedTaskIndex === index;
+                    const taskStatus = progress.find(p => p.taskIndex === index)?.status || 'PENDING';
+                    const isCompleted = taskStatus === 'COMPLETED';
+
+                    return (
                         <div
-                            key={reminder.id}
-                            className={`reminder-item reminder-${reminder.type.toLowerCase()}`}
+                            key={index}
+                            className={`tf-task-item ${isExpanded ? 'expanded' : ''} ${isCompleted ? 'completed' : ''}`}
                         >
-                            <div className="reminder-header">
-                                <span className="reminder-icon">
-                                    {reminder.type === 'ENCOURAGE' ? '💪' :
-                                        reminder.type === 'AI_WARNING' ? '⚠️' :
-                                            reminder.type === 'IDLE_WARNING' ? '⏰' : '💬'}
-                                </span>
-                                <span className="reminder-type">
-                                    {reminder.type === 'ENCOURAGE' ? '鼓励' :
-                                        reminder.type === 'AI_WARNING' ? 'AI使用提醒' :
-                                            reminder.type === 'IDLE_WARNING' ? '进度提醒' : '消息'}
-                                </span>
-                                <button
-                                    className="btn-dismiss"
-                                    onClick={() => markReminderRead(reminder.id)}
-                                >
-                                    ✕
-                                </button>
-                            </div>
-                            <p className="reminder-message">{reminder.message}</p>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {/* 项目选择弹窗 */}
-            {showProjectSelect && (
-                <div className="project-select-modal">
-                    <div className="project-select-content">
-                        <h4>开始新项目</h4>
-                        <div className="form-group">
-                            <label>选择模板</label>
-                            <select
-                                value={selectedTemplateId}
-                                onChange={e => setSelectedTemplateId(e.target.value)}
-                            >
-                                <option value="">请选择...</option>
-                                {templates.map(t => (
-                                    <option key={t.id} value={t.id}>{t.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label>项目标题（可选）</label>
-                            <input
-                                type="text"
-                                value={projectTitle}
-                                onChange={e => setProjectTitle(e.target.value)}
-                                placeholder="我的互动叙事设计"
-                            />
-                        </div>
-                        <div className="form-actions">
-                            <button onClick={() => setShowProjectSelect(false)}>取消</button>
-                            <button
-                                className="btn-primary"
-                                onClick={handleCreateProject}
-                                disabled={!selectedTemplateId || loading}
-                            >
-                                {loading ? '创建中...' : '创建项目'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 任务流程视图 */}
-            {currentProject && (
-                <div className="task-flow-content">
-                    <div className="project-info">
-                        <span className="project-title">
-                            {currentProject.title || currentProject.template?.name}
-                        </span>
-                        <span className={`project-status status-${currentProject.status.toLowerCase()}`}>
-                            {currentProject.status === 'COMPLETED' ? '已完成' : '进行中'}
-                        </span>
-                    </div>
-
-                    {/* 当前任务提示 */}
-                    {currentTask && (
-                        <div className="current-task-prompt">
-                            <div className="prompt-header">
-                                <span className="prompt-icon">💡</span>
-                                <span className="prompt-title">当前任务提示</span>
-                            </div>
-                            {currentTask.softPrompts.map((prompt, i) => (
-                                <p key={i} className="soft-prompt">{prompt}</p>
-                            ))}
-                            <div className="suggested-ai">
-                                建议使用 <strong>{currentTask.suggestedAICount}</strong> 个 AI 辅助
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 阶段和任务列表 */}
-                    <div className="phases-list">
-                        {Object.entries(phases).map(([phase, phaseTasks]) => (
                             <div
-                                key={phase}
-                                className={`phase-group ${Number(phase) === currentPhase ? 'phase-current' : ''}`}
+                                className="tf-task-header"
+                                onClick={() => setExpandedTaskIndex(isExpanded ? -1 : index)}
                             >
-                                <div className="phase-header">
-                                    <span className="phase-name">{phaseNames[Number(phase)] || `阶段 ${phase}`}</span>
-                                    <span className="phase-progress">
-                                        {phaseTasks.filter(t => getTaskStatus(t.index) === 'COMPLETED').length}/{phaseTasks.length}
-                                    </span>
+                                <div className={`tf-task-circle ${isExpanded ? 'active' : ''}`}>
+                                    {isCompleted ? '✓' : index + 1}
                                 </div>
-                                <div className="tasks-list">
-                                    {phaseTasks.map(task => {
-                                        const status = getTaskStatus(task.index);
-                                        const aiRatio = getTaskAIRatio(task.index);
-                                        const isCurrent = task.index === currentTaskIndex;
-
-                                        return (
-                                            <div
-                                                key={task.index}
-                                                className={`task-item task-${status.toLowerCase()} ${isCurrent ? 'task-current' : ''}`}
-                                            >
-                                                <div className="task-status-icon">
-                                                    {status === 'COMPLETED' ? '✅' :
-                                                        status === 'IN_PROGRESS' ? '🔄' : '⏳'}
-                                                </div>
-                                                <div className="task-info">
-                                                    <div className="task-name">{task.name}</div>
-                                                    <div className="task-desc">{task.description}</div>
-                                                    {status !== 'PENDING' && (
-                                                        <div className="task-ai-ratio">
-                                                            AI占比: <span className={aiRatio > 70 ? 'ratio-high' : aiRatio > 40 ? 'ratio-medium' : 'ratio-low'}>{aiRatio}%</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="task-actions">
-                                                    {status === 'PENDING' && task.index === currentTaskIndex && (
-                                                        <button
-                                                            className="btn-start"
-                                                            onClick={() => handleStartTask(task.index)}
-                                                        >
-                                                            开始
-                                                        </button>
-                                                    )}
-                                                    {status === 'IN_PROGRESS' && (
-                                                        <button
-                                                            className="btn-complete"
-                                                            onClick={() => handleCompleteTask(task.index)}
-                                                        >
-                                                            完成
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                <span className="tf-task-name">{task.name || (task as any).title}</span>
+                                <span className={`tf-task-arrow ${isExpanded ? 'down' : ''}`}>›</span>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            )}
 
-            {/* 无项目提示 */}
-            {!currentProject && !showProjectSelect && (
-                <div className="no-project-hint">
-                    <p>📝 点击"开始项目"创建互动叙事设计项目</p>
-                    <p>任务流程将引导你完成设计过程</p>
-                </div>
-            )}
+                            {isExpanded && (
+                                <div className="tf-task-content">
+                                    <div className="tf-chat-list">
+                                        {conversations.map(conv => (
+                                            <div
+                                                key={conv.id}
+                                                className={`tf-chat-item ${currentConversation?.id === conv.id ? 'active' : ''}`}
+                                                onClick={(e) => handleSelectConversation(e, conv.id)}
+                                            >
+                                                <span className="tf-chat-icon">💬</span>
+                                                <span className="tf-chat-title">
+                                                    {conv.title || "新对话"}
+                                                </span>
+                                                {conv.messages && conv.messages.length > 0 && (
+                                                    <span className="tf-chat-count">{conv.messages.length}</span>
+                                                )}
+                                                {/* <button className="tf-chat-del" onClick={(e) => handleDeleteChat(e, conv.id)}>🗑</button> */}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button className="tf-btn-new-chat" onClick={handleNewChat}>
+                                        <span className="plus-icon">+</span> 新建对话
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

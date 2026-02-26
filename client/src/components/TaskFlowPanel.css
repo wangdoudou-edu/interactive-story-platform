@@ -1,455 +1,229 @@
-/* Task Flow Panel Styles */
+/* Task Flow Panel Styles - Completely Redesigned based on Figma mockup */
 .task-flow-panel {
     display: flex;
     flex-direction: column;
     height: 100%;
     background: var(--bg-secondary, #1a1a2e);
-    border-radius: 12px;
+    color: var(--text-primary, #fff);
     overflow: hidden;
 }
 
-.task-flow-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+.tf-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.task-flow-header h3 {
-    margin: 0;
-    font-size: 16px;
-    color: var(--text-primary, #fff);
-}
-
-.btn-start-project {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-start-project:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-/* Reminders */
-.reminders-section {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.reminder-item {
-    padding: 12px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 3px solid #667eea;
-    animation: slideIn 0.3s ease-out;
-}
-
-.reminder-encourage {
-    border-left-color: #10b981;
-}
-
-.reminder-ai_warning {
-    border-left-color: #f59e0b;
-}
-
-.reminder-idle_warning {
-    border-left-color: #ef4444;
-}
-
-.reminder-header {
+.btn-tf-back {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.reminder-icon {
-    font-size: 16px;
-}
-
-.reminder-type {
-    font-size: 12px;
-    color: var(--text-secondary, #94a3b8);
-    flex: 1;
-}
-
-.btn-dismiss {
-    background: none;
-    border: none;
-    color: var(--text-secondary, #94a3b8);
-    cursor: pointer;
-    padding: 4px;
-    font-size: 12px;
-}
-
-.reminder-message {
-    margin: 0;
-    font-size: 14px;
-    color: var(--text-primary, #fff);
-    line-height: 1.5;
-}
-
-/* Project Select Modal */
-.project-select-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.project-select-content {
-    background: var(--bg-secondary, #1a1a2e);
-    padding: 24px;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-}
-
-.project-select-content h4 {
-    margin: 0 0 20px 0;
-    font-size: 18px;
-    color: var(--text-primary, #fff);
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: var(--text-secondary, #94a3b8);
-}
-
-.form-group select,
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: var(--text-primary, #fff);
-    font-size: 14px;
-}
-
-.form-group select:focus,
-.form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-.form-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.form-actions button {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.form-actions button:first-child {
+    gap: 6px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--text-secondary, #94a3b8);
-}
-
-.form-actions button.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-    color: white;
-}
-
-.form-actions button.btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Task Flow Content */
-.task-flow-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-}
-
-.project-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.project-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary, #fff);
-}
-
-.project-status {
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 12px;
-}
-
-.status-in_progress {
-    background: rgba(102, 126, 234, 0.2);
-    color: #667eea;
-}
-
-.status-completed {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-}
-
-/* Current Task Prompt */
-.current-task-prompt {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border: 1px solid rgba(102, 126, 234, 0.3);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 20px;
-}
-
-.prompt-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.prompt-icon {
-    font-size: 18px;
-}
-
-.prompt-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary, #fff);
-}
-
-.soft-prompt {
-    margin: 0 0 8px 0;
-    font-size: 13px;
     color: var(--text-secondary, #94a3b8);
-    line-height: 1.5;
-    padding-left: 26px;
+    font-size: 14px;
+    padding: 0;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.suggested-ai {
-    font-size: 12px;
-    color: #667eea;
-    margin-top: 12px;
-    padding-left: 26px;
+.btn-tf-back:hover {
+    color: var(--text-primary, #fff);
 }
 
-/* Phases List */
-.phases-list {
+.tf-project-info {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
 }
 
-.phase-group {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 12px;
-    overflow: hidden;
+.tf-project-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
 }
 
-.phase-current {
-    border: 1px solid rgba(102, 126, 234, 0.3);
-}
-
-.phase-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.phase-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary, #fff);
-}
-
-.phase-progress {
-    font-size: 12px;
-    color: var(--text-secondary, #94a3b8);
-}
-
-/* Tasks List */
-.tasks-list {
-    padding: 8px;
-}
-
-.task-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 4px;
-    transition: background 0.2s;
-}
-
-.task-item:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.task-current {
-    background: rgba(102, 126, 234, 0.1);
-    border: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.task-status-icon {
-    font-size: 16px;
-    width: 24px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.task-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.task-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary, #fff);
-    margin-bottom: 4px;
-}
-
-.task-desc {
+.tf-project-desc {
+    margin: 0;
     font-size: 12px;
     color: var(--text-secondary, #94a3b8);
     line-height: 1.4;
 }
 
-.task-ai-ratio {
-    font-size: 11px;
-    color: var(--text-tertiary, #64748b);
-    margin-top: 6px;
+.tf-progress-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.ratio-low {
-    color: #10b981;
+.tf-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+    margin-bottom: 8px;
 }
 
-.ratio-medium {
-    color: #f59e0b;
+.tf-progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
 }
 
-.ratio-high {
-    color: #ef4444;
+.tf-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+    transition: width 0.3s ease;
 }
 
-.task-actions {
+.tf-tasks-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+}
+
+.tf-tasks-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.tf-tasks-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.tf-task-item {
+    margin-bottom: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background 0.2s;
+}
+
+.tf-task-item.expanded {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tf-task-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    cursor: pointer;
+    gap: 12px;
+    transition: background 0.2s;
+}
+
+.tf-task-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tf-task-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--text-secondary, #94a3b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+    transition: all 0.2s;
     flex-shrink: 0;
 }
 
-.btn-start,
-.btn-complete {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
+.tf-task-circle.active {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+    font-weight: 600;
 }
 
-.btn-start {
-    background: rgba(102, 126, 234, 0.2);
-    color: #667eea;
-}
-
-.btn-start:hover {
-    background: rgba(102, 126, 234, 0.3);
-}
-
-.btn-complete {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-}
-
-.btn-complete:hover {
-    background: rgba(16, 185, 129, 0.3);
-}
-
-/* No Project Hint */
-.no-project-hint {
+.tf-task-name {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-.no-project-hint p {
-    margin: 4px 0;
-    font-size: 13px;
-    color: var(--text-secondary, #94a3b8);
-}
-
-.no-project-hint p:first-child {
     font-size: 14px;
     color: var(--text-primary, #fff);
 }
 
-/* Animations */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.tf-task-item:not(.expanded) .tf-task-name {
+    color: var(--text-secondary, #94a3b8);
 }
 
-/* Scrollbar */
-.task-flow-content::-webkit-scrollbar {
-    width: 6px;
+.tf-task-arrow {
+    color: var(--text-secondary, #94a3b8);
+    font-size: 18px;
+    transition: transform 0.2s;
 }
 
-.task-flow-content::-webkit-scrollbar-track {
-    background: transparent;
+.tf-task-arrow.down {
+    transform: rotate(90deg);
 }
 
-.task-flow-content::-webkit-scrollbar-thumb {
+.tf-task-content {
+    padding: 0 10px 12px 46px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tf-chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tf-chat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary, #94a3b8);
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.tf-chat-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary, #fff);
+}
+
+.tf-chat-item.active {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    color: var(--text-primary, #fff);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.task-flow-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+.tf-chat-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-tertiary, #64748b);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.tf-btn-new-chat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.tf-btn-new-chat:hover {
+    background: #f0f0f0;
+    transform: translateY(-1px);
 }

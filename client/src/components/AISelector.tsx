@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { useChatStore } from '../stores/chatStore';
 import './AISelector.css';
 
 export default function AISelector() {
+    const { t } = useTranslation();
     const { aiConfigs, selectedAIIds, toggleAISelection } = useChatStore();
 
     const getProviderColor = (provider: string) => {
@@ -17,7 +19,7 @@ export default function AISelector() {
         return (
             <div className="ai-selector">
                 <div className="ai-selector-empty">
-                    <span>暂无可用的 AI 配置</span>
+                    <span>{t('aiSelector.empty')}</span>
                 </div>
             </div>
         );
@@ -27,7 +29,7 @@ export default function AISelector() {
         <div className="ai-selector">
             <div className="ai-selector-label">
                 <span className="label-icon">🤖</span>
-                <span>选择 AI:</span>
+                <span>{t('aiSelector.title')}</span>
             </div>
             <div className="ai-chips">
                 {aiConfigs.map(ai => {
@@ -54,7 +56,7 @@ export default function AISelector() {
             </div>
             {selectedAIIds.length === 0 && (
                 <div className="ai-selector-warning">
-                    ⚠️ 请至少选择一个 AI 进行对话
+                    {t('aiSelector.warning')}
                 </div>
             )}
         </div>

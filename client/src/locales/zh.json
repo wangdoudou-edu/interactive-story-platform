@@ -1,0 +1,174 @@
+{
+  "common": {
+    "projects": "项目",
+    "logout": "退出",
+    "dashboard": "仪表盘",
+    "back": "返回",
+    "cancel": "取消",
+    "loading": "加载中..."
+  },
+  "projectList": {
+    "title": "我的项目",
+    "subtitle": "选择一个项目继续创作，或开始一个新项目",
+    "newProject": "新建项目",
+    "loadingProjects": "加载项目中...",
+    "noProjects": "还没有项目",
+    "startJourney": "点击\"新建项目\"，开始你的互动叙事设计之旅",
+    "noNameProject": "未命名项目",
+    "unknownTemplate": "未知模板",
+    "currentStage": "当前阶段",
+    "noTasks": "暂无",
+    "completed": "已完成",
+    "inProgress": "进行中",
+    "lastModified": "编辑于",
+    "clickToEnter": "点击进入 →",
+    "timeAgo": {
+      "justNow": "刚刚",
+      "hoursAgo": "{{count}}小时前",
+      "daysAgo": "{{count}}天前"
+    }
+  },
+  "newProjectModal": {
+    "title": "新建项目",
+    "nameLabel": "项目名称（可选）",
+    "namePlaceholder": "留空则使用模板名称",
+    "templateLabel": "选择任务模板",
+    "noTemplates": "暂无可用模板，请联系老师",
+    "taskStages": "个任务阶段",
+    "createBtn": "开始创作",
+    "creating": "创建中..."
+  },
+  "chatPage": {
+    "toggleTaskFlow": "切换任务流程面板",
+    "togglePanels": "切换侧边栏",
+    "logoSubtitle": "互动叙事设计平台"
+  },
+  "chatSidebar": {
+    "newChat": "新对话",
+    "confirmDelete": "确定要删除这个对话吗？",
+    "loading": "加载中...",
+    "noConversations": "暂无对话",
+    "emptyHint": "点击上方按钮开始新对话",
+    "defaultTitle": "新对话",
+    "deleteTitle": "删除对话",
+    "backToProjects": "项目列表",
+    "backTitle": "返回项目列表",
+    "timeAgo": {
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{{count}}天前"
+    }
+  },
+  "chatArea": {
+    "welcomeTitle": "欢迎使用 AI-LOP",
+    "welcomeSubtitle": "AI 协作学习平台 - 多AI对话 · 智能批注 · 创意整合",
+    "feature1Title": "多 AI 同时对话",
+    "feature1Desc": "支持同时与多个 AI 进行对话，获取不同视角的回答",
+    "feature2Title": "智能批注",
+    "feature2Desc": "对 AI 回答进行标注和评价，记录你的思考过程",
+    "feature3Title": "创意整合",
+    "feature3Desc": "将多个 AI 的观点整合，激发创新灵感",
+    "placeholder": "输入你的问题... (Shift+Enter 换行)"
+  },
+  "taskFlow": {
+    "title": "📋 任务流程",
+    "startProject": "开始项目",
+    "reminderEncourage": "鼓励",
+    "reminderWarning": "AI使用提醒",
+    "reminderIdle": "进度提醒",
+    "reminderMessage": "消息",
+    "startNewProject": "开始新项目",
+    "selectTemplate": "选择模板",
+    "pleaseSelect": "请选择...",
+    "projectTitleOptional": "项目标题（可选）",
+    "projectTitlePlaceholder": "我的互动叙事设计",
+    "createBtn": "创建项目",
+    "creating": "创建中...",
+    "statusCompleted": "已完成",
+    "statusInProgress": "进行中",
+    "currentTaskPrompt": "当前任务提示",
+    "suggestedAI1": "建议使用 ",
+    "suggestedAI2": " 个 AI 辅助",
+    "phase1": "概念阶段",
+    "phase2": "设计阶段",
+    "phase3": "整合阶段",
+    "aiRatio": "AI占比: ",
+    "startTask": "开始",
+    "completeTask": "完成",
+    "noProjectHint1": "📝 点击\"开始项目\"创建互动叙事设计项目",
+    "noProjectHint2": "任务流程将引导你完成设计过程"
+  },
+  "noteCard": {
+    "dragHintTitle": "拖拽到草稿区使用",
+    "removeTitle": "移除",
+    "dragHintText": "↕ 拖拽到草稿区"
+  },
+  "notePanel": {
+    "title": "📚 笔记区",
+    "emptyText": "选择对话后开始记录知识点",
+    "knowledgePoints": "📌 知识点",
+    "placeholder": "记录学习到的知识点..."
+  },
+  "draftPanel": {
+    "savedSnapshot": "已保存为第 {{round}} 轮快照",
+    "loadHistoryConfirm": "加载第 {{round}} 轮的内容？当前内容会被替换。",
+    "knowledgePointPrefix": "📌 知识点：",
+    "title": "📝 草稿区",
+    "emptyText": "选择对话后开始整理内容",
+    "saving": "保存中...",
+    "viewHistory": "查看历史",
+    "historyCount": "📋 历史 ({{count}})",
+    "saveSnapshotBtnTitle": "保存快照并开始下一轮",
+    "completeRoundBtn": "✓ 完成本轮",
+    "roundText": "第 {{round}} 轮",
+    "dropHint": "📌 松开以添加知识点到草稿",
+    "placeholder": "整理 AI 回答中的有价值内容..."
+  },
+  "messageList": {
+    "addCommentPrompt": "添加批注内容（可选）：",
+    "organizedToDraft": "已整理到草稿区",
+    "you": "你",
+    "organize": "📋 整理",
+    "organizeTitle": "整理到草稿区",
+    "knowledge": "📌 知识点",
+    "knowledgeTitle": "标记为知识点",
+    "delete": "🗑️ 删除",
+    "deleteTitle": "标记删除",
+    "doubt": "疑问",
+    "inspiration": "灵感",
+    "question": "提问",
+    "note": "备注"
+  },
+  "aiSelector": {
+    "empty": "暂无可用的 AI 配置",
+    "title": "选择 AI:",
+    "warning": "⚠️ 请至少选择一个 AI 进行对话"
+  },
+  "fileUpload": {
+    "failed": "上传失败",
+    "uploading": "上传中...",
+    "prompt": "点击或拖拽上传文件",
+    "errorAlert": "文件上传失败"
+  },
+  "richTextEditor": {
+    "placeholder": "开始输入...",
+    "bold": "粗体",
+    "italic": "斜体",
+    "heading": "标题",
+    "list": "列表",
+    "quote": "引用"
+  },
+  "login": {
+    "error": "登录失败",
+    "subtitle": "AI 协作学习平台",
+    "features": "多AI对话 · 智能批注 · 创意整合",
+    "title": "账号登录",
+    "hint": "请使用教师分配的账号登录",
+    "usernameLabel": "用户名",
+    "usernamePlaceholder": "请输入用户名",
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "submitBtn": "登录",
+    "footer": "开启你的 AI 协作学习之旅"
+  }
+}

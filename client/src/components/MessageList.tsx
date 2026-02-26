@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useChatStore } from '../stores/chatStore';
 import { useAnnotationStore } from '../stores/annotationStore';
 import './MessageList.css';
@@ -12,6 +13,7 @@ interface SelectionInfo {
 }
 
 export default function MessageList() {
+    const { t, i18n } = useTranslation();
     const { messages, aiConfigs, isSending, currentConversation } = useChatStore();
     const { annotations, addAnnotation, loadAnnotations, addToNote, organizeToDraft } = useAnnotationStore();
     const listRef = useRef<HTMLDivElement>(null);
@@ -51,7 +53,7 @@ export default function MessageList() {
 
     const formatTime = (dateStr: string) => {
         const date = new Date(dateStr);
-        return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'zh-CN', { hour: '2-digit', minute: '2-digit' });
     };
 
     // 处理文本选择
@@ -113,7 +115,7 @@ export default function MessageList() {
     const handleComment = async (label: string) => {
         if (!selection) return;
 
-        const note = prompt('添加批注内容（可选）：');
+        const note = prompt(t('messageList.addCommentPrompt'));
         await addAnnotation({
             messageId: selection.messageId,
             selectedText: selection.text,
@@ -143,7 +145,7 @@ export default function MessageList() {
                 note: a.note
             }))
         );
-        alert('已整理到草稿区');
+        alert(t('messageList.organizedToDraft'));
     };
 
     const closeMenu = () => {
@@ -211,13 +213,13 @@ export default function MessageList() {
                     className="annotation-menu"
                     style={{ left: popupPos.x, top: popupPos.y }}
                 >
-                    <button onClick={handleKnowledge} title="标记为知识点">📌 知识点</button>
-                    <button onClick={handleDelete} title="标记删除">🗑️ 删除</button>
+                    <button onClick={handleKnowledge} title={t('messageList.knowledgeTitle')}>{t('messageList.knowledge')}</button>
+                    <button onClick={handleDelete} title={t('messageList.deleteTitle')}>{t('messageList.delete')}</button>
                     <div className="menu-divider"></div>
-                    <button onClick={() => handleComment('DOUBT')} title="疑问">❓</button>
-                    <button onClick={() => handleComment('INSPIRATION')} title="灵感">💡</button>
-                    <button onClick={() => handleComment('QUESTION')} title="提问">🤔</button>
-                    <button onClick={() => handleComment('NOTE')} title="备注">📝</button>
+                    <button onClick={() => handleComment('DOUBT')} title={t('messageList.doubt')}>❓</button>
+                    <button onClick={() => handleComment('INSPIRATION')} title={t('messageList.inspiration')}>💡</button>
+                    <button onClick={() => handleComment('QUESTION')} title={t('messageList.question')}>🤔</button>
+                    <button onClick={() => handleComment('NOTE')} title={t('messageList.note')}>📝</button>
                 </div>
             )}
 
@@ -245,7 +247,7 @@ export default function MessageList() {
                             <div className="message-body">
                                 <div className="message-header">
                                     <span className="message-sender">
-                                        {isUser ? '你' : (aiInfo?.name || 'AI')}
+                                        {isUser ? t('messageList.you') : (aiInfo?.name || 'AI')}
                                     </span>
                                     {!isUser && aiInfo && (
                                         <span className="message-provider" style={{ color: getProviderColor(aiInfo.provider) }}>
@@ -259,9 +261,9 @@ export default function MessageList() {
                                         <button
                                             className="organize-btn"
                                             onClick={() => handleOrganize(message.id, message.aiConfigId)}
-                                            title="整理到草稿区"
+                                            title={t('messageList.organizeTitle')}
                                         >
-                                            📋 整理
+                                            {t('messageList.organize')}
                                         </button>
                                     )}
                                 </div>

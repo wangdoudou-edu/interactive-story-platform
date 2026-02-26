@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './FileUpload.css';
 
 interface UploadedFile {
@@ -18,6 +19,7 @@ interface FileUploadProps {
 const API_BASE = 'http://localhost:3001/api';
 
 export default function FileUpload({ onUpload, multiple = false }: FileUploadProps) {
+    const { t } = useTranslation();
     const [uploading, setUploading] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +44,7 @@ export default function FileUpload({ onUpload, multiple = false }: FileUploadPro
                     body: formData
                 });
 
-                if (!response.ok) throw new Error('上传失败');
+                if (!response.ok) throw new Error(t('fileUpload.failed'));
                 const uploadedFiles = await response.json();
                 onUpload(uploadedFiles);
             } else {
@@ -54,13 +56,13 @@ export default function FileUpload({ onUpload, multiple = false }: FileUploadPro
                     body: formData
                 });
 
-                if (!response.ok) throw new Error('上传失败');
+                if (!response.ok) throw new Error(t('fileUpload.failed'));
                 const uploadedFile = await response.json();
                 onUpload([uploadedFile]);
             }
         } catch (error) {
             console.error('Upload error:', error);
-            alert('文件上传失败');
+            alert(t('fileUpload.errorAlert'));
         } finally {
             setUploading(false);
         }
@@ -109,12 +111,12 @@ export default function FileUpload({ onUpload, multiple = false }: FileUploadPro
             {uploading ? (
                 <div className="upload-status">
                     <span className="spinner">⏳</span>
-                    <span>上传中...</span>
+                    <span>{t('fileUpload.uploading')}</span>
                 </div>
             ) : (
                 <div className="upload-prompt">
                     <span className="upload-icon">📎</span>
-                    <span>点击或拖拽上传文件</span>
+                    <span>{t('fileUpload.prompt')}</span>
                 </div>
             )}
         </div>

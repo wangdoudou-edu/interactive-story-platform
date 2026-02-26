@@ -1,0 +1,174 @@
+{
+    "common": {
+        "projects": "Projects",
+        "logout": "Logout",
+        "dashboard": "Dashboard",
+        "back": "Back",
+        "cancel": "Cancel",
+        "loading": "Loading..."
+    },
+    "projectList": {
+        "title": "My Projects",
+        "subtitle": "Select a project to continue, or start a new one",
+        "newProject": "New Project",
+        "loadingProjects": "Loading projects...",
+        "noProjects": "No projects yet",
+        "startJourney": "Click \"New Project\" to begin your interactive narrative design journey",
+        "noNameProject": "Unnamed Project",
+        "unknownTemplate": "Unknown Template",
+        "currentStage": "Current Stage",
+        "noTasks": "None",
+        "completed": "Completed",
+        "inProgress": "In Progress",
+        "lastModified": "Edited",
+        "clickToEnter": "Click to enter →",
+        "timeAgo": {
+            "justNow": "Just now",
+            "hoursAgo": "{{count}} hours ago",
+            "daysAgo": "{{count}} days ago"
+        }
+    },
+    "newProjectModal": {
+        "title": "New Project",
+        "nameLabel": "Project Name (Optional)",
+        "namePlaceholder": "Leave blank to use template name",
+        "templateLabel": "Select Task Template",
+        "noTemplates": "No templates available",
+        "taskStages": "task stages",
+        "createBtn": "Start Creating",
+        "creating": "Creating..."
+    },
+    "chatPage": {
+        "toggleTaskFlow": "Toggle Task Flow",
+        "togglePanels": "Toggle Side Panels",
+        "logoSubtitle": "Interactive Narrative Design Platform"
+    },
+    "chatSidebar": {
+        "newChat": "New Chat",
+        "confirmDelete": "Are you sure you want to delete this chat?",
+        "loading": "Loading...",
+        "noConversations": "No Conversations",
+        "emptyHint": "Click the button above to start a new chat",
+        "defaultTitle": "New Chat",
+        "deleteTitle": "Delete Chat",
+        "backToProjects": "Projects",
+        "backTitle": "Back to Projects",
+        "timeAgo": {
+            "today": "Today",
+            "yesterday": "Yesterday",
+            "daysAgo": "{{count}} days ago"
+        }
+    },
+    "chatArea": {
+        "welcomeTitle": "Welcome to AI-LOP",
+        "welcomeSubtitle": "AI Collaborative Learning Platform - Multi-AI Chat · Smart Annotation · Creative Integration",
+        "feature1Title": "Multi-AI Chat",
+        "feature1Desc": "Chat with multiple AIs simultaneously to get different perspectives",
+        "feature2Title": "Smart Annotation",
+        "feature2Desc": "Annotate and evaluate AI responses, record your thinking process",
+        "feature3Title": "Creative Integration",
+        "feature3Desc": "Integrate ideas from multiple AIs to spark innovation",
+        "placeholder": "Type your message... (Shift+Enter for new line)"
+    },
+    "taskFlow": {
+        "title": "📋 Task Flow",
+        "startProject": "Start Project",
+        "reminderEncourage": "Encouragement",
+        "reminderWarning": "AI Warning",
+        "reminderIdle": "Idle Reminder",
+        "reminderMessage": "Message",
+        "startNewProject": "Start New Project",
+        "selectTemplate": "Select Template",
+        "pleaseSelect": "Please select...",
+        "projectTitleOptional": "Project Title (Optional)",
+        "projectTitlePlaceholder": "My Interactive Narrative Design",
+        "createBtn": "Create Project",
+        "creating": "Creating...",
+        "statusCompleted": "Completed",
+        "statusInProgress": "In Progress",
+        "currentTaskPrompt": "Current Task Prompt",
+        "suggestedAI1": "Consider using ",
+        "suggestedAI2": " AI assistants",
+        "phase1": "Concept Phase",
+        "phase2": "Design Phase",
+        "phase3": "Integration Phase",
+        "aiRatio": "AI Ratio: ",
+        "startTask": "Start",
+        "completeTask": "Complete",
+        "noProjectHint1": "📝 Click \"Start Project\" to create your narrative design project",
+        "noProjectHint2": "The task flow will guide you through the process"
+    },
+    "noteCard": {
+        "dragHintTitle": "Drag to draft area to use",
+        "removeTitle": "Remove",
+        "dragHintText": "↕ Drag to draft area"
+    },
+    "notePanel": {
+        "title": "📚 Note Area",
+        "emptyText": "Select a conversation to start recording knowledge points",
+        "knowledgePoints": "📌 Knowledge points",
+        "placeholder": "Record learned knowledge points..."
+    },
+    "draftPanel": {
+        "savedSnapshot": "Saved as snapshot for round {{round}}",
+        "loadHistoryConfirm": "Load content from round {{round}}? Current content will be replaced.",
+        "knowledgePointPrefix": "📌 Knowledge Point: ",
+        "title": "📝 Draft Area",
+        "emptyText": "Select a conversation to start organizing content",
+        "saving": "Saving...",
+        "viewHistory": "View History",
+        "historyCount": "📋 History ({{count}})",
+        "saveSnapshotBtnTitle": "Save snapshot and start next round",
+        "completeRoundBtn": "✓ Complete Round",
+        "roundText": "Round {{round}}",
+        "dropHint": "📌 Release to add knowledge point to draft",
+        "placeholder": "Organize valuable content from AI responses..."
+    },
+    "messageList": {
+        "addCommentPrompt": "Add comment content (optional):",
+        "organizedToDraft": "Organized to draft area",
+        "you": "You",
+        "organize": "📋 Organize",
+        "organizeTitle": "Organize to draft area",
+        "knowledge": "📌 Knowledge",
+        "knowledgeTitle": "Mark as knowledge point",
+        "delete": "🗑️ Delete",
+        "deleteTitle": "Mark as deleted",
+        "doubt": "Doubt",
+        "inspiration": "Inspiration",
+        "question": "Question",
+        "note": "Note"
+    },
+    "aiSelector": {
+        "empty": "No available AI configuration",
+        "title": "Select AI:",
+        "warning": "⚠️ Please select at least one AI for chat"
+    },
+    "fileUpload": {
+        "failed": "Upload failed",
+        "uploading": "Uploading...",
+        "prompt": "Click or drag to upload files",
+        "errorAlert": "File upload failed"
+    },
+    "richTextEditor": {
+        "placeholder": "Start typing...",
+        "bold": "Bold",
+        "italic": "Italic",
+        "heading": "Heading",
+        "list": "List",
+        "quote": "Quote"
+    },
+    "login": {
+        "error": "Login failed",
+        "subtitle": "AI Collaborative Learning Platform",
+        "features": "Multi-AI Chat · Smart Annotation · Creative Integration",
+        "title": "Account Login",
+        "hint": "Please login with the account assigned by your teacher",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Enter your username",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "submitBtn": "Log In",
+        "footer": "Start your AI collaborative learning journey"
+    }
+}

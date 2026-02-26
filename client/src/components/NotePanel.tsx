@@ -1,6 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import RichTextEditor from './RichTextEditor';
+import NoteCard from './NoteCard';
 import { noteApi } from '../services/api';
+import { useAnnotationStore } from '../stores/annotationStore';
 import './EditorPanel.css';
 
 interface NotePanelProps {
@@ -8,9 +11,30 @@ interface NotePanelProps {
 }
 
 export default function NotePanel({ conversationId }: NotePanelProps) {
+    const { t } = useTranslation();
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [cardsExpanded, setCardsExpanded] = useState(true);
+    const { annotations } = useAnnotationStore();
+
+    // Extract all KNOWLEDGE annotations across loaded messages
+    const knowledgePoints = useMemo(() => {
+        const points: Array<{ id: string; text: string; messageId: string; createdAt: string }> = [];
+        for (const [messageId, anns] of annotations) {
+            for (const a of anns) {
+                if (a.type === 'KNOWLEDGE' && !a.isDeleted) {
+                    points.push({
+                        id: a.id,
+                        text: a.selectedText,
+                        messageId,
+                        createdAt: a.createdAt,
+                    });
+                }
+            }
+        }
+        return points.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }, [annotations]);
 
     useEffect(() => {
         if (conversationId) {
@@ -64,10 +88,10 @@ export default function NotePanel({ conversationId }: NotePanelProps) {
         return (
             <div className="editor-panel">
                 <div className="panel-header">
-                    <h3>📚 笔记区</h3>
+                    <h3>{t('notePanel.title')}</h3>
                 </div>
                 <div className="panel-empty">
-                    <p>选择对话后开始记录知识点</p>
+                    <p>{t('notePanel.emptyText')}</p>
                 </div>
             </div>
         );
@@ -76,16 +100,40 @@ export default function NotePanel({ conversationId }: NotePanelProps) {
     return (
         <div className="editor-panel">
             <div className="panel-header">
-                <h3>📚 笔记区</h3>
-                {saving && <span className="saving-indicator">保存中...</span>}
+                <div className="header-left">
+                    <h3>{t('notePanel.title')}</h3>
+                    {saving && <span className="saving-indicator">{t('common.loading')}</span>}
+                </div>
+                {knowledgePoints.length > 0 && (
+                    <button
+                        className="history-btn"
+                        onClick={() => setCardsExpanded(!cardsExpanded)}
+                    >
+                        {t('notePanel.knowledgePoints')} ({knowledgePoints.length}) {cardsExpanded ? '▾' : '▸'}
+                    </button>
+                )}
             </div>
+
+            {/* Knowledge Point Cards */}
+            {cardsExpanded && knowledgePoints.length > 0 && (
+                <div className="knowledge-cards-section">
+                    {knowledgePoints.map(kp => (
+                        <NoteCard
+                            key={kp.id}
+                            text={kp.text}
+                            createdAt={kp.createdAt}
+                        />
+                    ))}
+                </div>
+            )}
+
             {loading ? (
-                <div className="panel-loading">加载中...</div>
+                <div className="panel-loading">{t('common.loading')}</div>
             ) : (
                 <RichTextEditor
                     content={content}
                     onChange={handleChange}
-                    placeholder="记录学习到的知识点..."
+                    placeholder={t('notePanel.placeholder')}
                 />
             )}
         </div>

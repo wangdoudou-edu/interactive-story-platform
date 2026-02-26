@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import RichTextEditor from './RichTextEditor';
 import { draftApi } from '../services/api';
 import './EditorPanel.css';
@@ -15,11 +16,14 @@ interface DraftHistoryItem {
 }
 
 export default function DraftPanel({ conversationId }: DraftPanelProps) {
+    const { t } = useTranslation();
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [history, setHistory] = useState<DraftHistoryItem[]>([]);
     const [showHistory, setShowHistory] = useState(false);
+    const [dragOver, setDragOver] = useState(false);
+    const editorRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (conversationId) {
@@ -87,16 +91,38 @@ export default function DraftPanel({ conversationId }: DraftPanelProps) {
         try {
             await draftApi.snapshot(conversationId);
             await loadHistory();
-            alert('已保存为第 ' + (history.length + 1) + ' 轮快照');
+            alert(t('draftPanel.savedSnapshot', { round: history.length + 1 }));
         } catch (error) {
             console.error('Snapshot error:', error);
         }
     };
 
     const handleLoadHistory = (item: DraftHistoryItem) => {
-        if (confirm(`加载第 ${item.roundNumber} 轮的内容？当前内容会被替换。`)) {
+        if (confirm(t('draftPanel.loadHistoryConfirm', { round: item.roundNumber }))) {
             setContent(item.content);
             setShowHistory(false);
+        }
+    };
+
+    // Drag & Drop handlers
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        setDragOver(true);
+    };
+
+    const handleDragLeave = () => {
+        setDragOver(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setDragOver(false);
+        const droppedText = e.dataTransfer.getData('text/plain');
+        if (droppedText) {
+            // Append the dropped knowledge point as a new paragraph
+            const newBlock = `<p><strong>${t('draftPanel.knowledgePointPrefix')}</strong>${droppedText}</p>`;
+            setContent(prev => prev ? `${prev}${newBlock}` : newBlock);
         }
     };
 
@@ -104,38 +130,44 @@ export default function DraftPanel({ conversationId }: DraftPanelProps) {
         return (
             <div className="editor-panel draft-panel">
                 <div className="panel-header">
-                    <h3>📝 草稿区</h3>
+                    <h3>{t('draftPanel.title')}</h3>
                 </div>
                 <div className="panel-empty">
-                    <p>选择对话后开始整理内容</p>
+                    <p>{t('draftPanel.emptyText')}</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="editor-panel draft-panel">
+        <div
+            className={`editor-panel draft-panel ${dragOver ? 'drag-over' : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            ref={editorRef}
+        >
             <div className="panel-header">
                 <div className="header-left">
-                    <h3>📝 草稿区</h3>
-                    {saving && <span className="saving-indicator">保存中...</span>}
+                    <h3>{t('draftPanel.title')}</h3>
+                    {saving && <span className="saving-indicator">{t('draftPanel.saving')}</span>}
                 </div>
                 <div className="header-actions">
                     {history.length > 0 && (
                         <button
                             className="history-btn"
                             onClick={() => setShowHistory(!showHistory)}
-                            title="查看历史"
+                            title={t('draftPanel.viewHistory')}
                         >
-                            📋 历史 ({history.length})
+                            {t('draftPanel.historyCount', { count: history.length })}
                         </button>
                     )}
                     <button
                         className="snapshot-btn"
                         onClick={handleSnapshot}
-                        title="保存快照并开始下一轮"
+                        title={t('draftPanel.saveSnapshotBtnTitle')}
                     >
-                        ✓ 完成本轮
+                        {t('draftPanel.completeRoundBtn')}
                     </button>
                 </div>
             </div>
@@ -148,7 +180,7 @@ export default function DraftPanel({ conversationId }: DraftPanelProps) {
                             className="history-item"
                             onClick={() => handleLoadHistory(item)}
                         >
-                            <span className="round">第 {item.roundNumber} 轮</span>
+                            <span className="round">{t('draftPanel.roundText', { round: item.roundNumber })}</span>
                             <span className="date">
                                 {new Date(item.createdAt).toLocaleString('zh-CN')}
                             </span>
@@ -157,13 +189,20 @@ export default function DraftPanel({ conversationId }: DraftPanelProps) {
                 </div>
             )}
 
+            {/* Drop zone visual hint */}
+            {dragOver && (
+                <div className="drop-zone-hint">
+                    {t('draftPanel.dropHint')}
+                </div>
+            )}
+
             {loading ? (
-                <div className="panel-loading">加载中...</div>
+                <div className="panel-loading">{t('common.loading')}</div>
             ) : (
                 <RichTextEditor
                     content={content}
                     onChange={handleChange}
-                    placeholder="整理 AI 回答中的有价值内容..."
+                    placeholder={t('draftPanel.placeholder')}
                 />
             )}
         </div>

@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useChatStore } from '../stores/chatStore';
 import './ChatSidebar.css';
 
@@ -6,6 +8,8 @@ interface ChatSidebarProps {
 }
 
 export default function ChatSidebar({ collapsed }: ChatSidebarProps) {
+    const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const {
         conversations,
         currentConversation,
@@ -25,7 +29,7 @@ export default function ChatSidebar({ collapsed }: ChatSidebarProps) {
 
     const handleDelete = async (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
-        if (confirm('确定要删除这个对话吗？')) {
+        if (confirm(t('chatSidebar.confirmDelete'))) {
             await deleteConversation(id);
         }
     };
@@ -36,30 +40,30 @@ export default function ChatSidebar({ collapsed }: ChatSidebarProps) {
         const diff = now.getTime() - date.getTime();
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-        if (days === 0) return '今天';
-        if (days === 1) return '昨天';
-        if (days < 7) return `${days}天前`;
-        return date.toLocaleDateString('zh-CN');
+        if (days === 0) return t('chatSidebar.timeAgo.today');
+        if (days === 1) return t('chatSidebar.timeAgo.yesterday');
+        if (days < 7) return t('chatSidebar.timeAgo.daysAgo', { count: days });
+        return date.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'zh-CN');
     };
 
     return (
         <aside className={`chat-sidebar ${collapsed ? 'collapsed' : ''}`}>
             <button className="new-chat-btn" onClick={handleNewChat}>
                 <span className="new-chat-icon">+</span>
-                <span className="new-chat-text">新对话</span>
+                <span className="new-chat-text">{t('chatSidebar.newChat')}</span>
             </button>
 
             <div className="conversations-list">
                 {isLoading && conversations.length === 0 ? (
                     <div className="sidebar-loading">
                         <span className="loading-spinner"></span>
-                        <span>加载中...</span>
+                        <span>{t('chatSidebar.loading')}</span>
                     </div>
                 ) : conversations.length === 0 ? (
                     <div className="no-conversations">
                         <span className="empty-icon">💬</span>
-                        <span>暂无对话</span>
-                        <span className="empty-hint">点击上方按钮开始新对话</span>
+                        <span>{t('chatSidebar.noConversations')}</span>
+                        <span className="empty-hint">{t('chatSidebar.emptyHint')}</span>
                     </div>
                 ) : (
                     conversations.map(conv => (
@@ -72,17 +76,22 @@ export default function ChatSidebar({ collapsed }: ChatSidebarProps) {
                                 <span className="conversation-icon">💭</span>
                                 <div className="conversation-info">
                                     <span className="conversation-title">
-                                        {conv.title || '新对话'}
+                                        {conv.title || t('chatSidebar.defaultTitle')}
                                     </span>
                                     <span className="conversation-date">
                                         {formatDate(conv.updatedAt)}
                                     </span>
                                 </div>
+                                {conv.messages && conv.messages.length > 0 && (
+                                    <span className="msg-count-badge">
+                                        {conv.messages.length}
+                                    </span>
+                                )}
                             </div>
                             <button
                                 className="delete-btn"
                                 onClick={(e) => handleDelete(e, conv.id)}
-                                title="删除对话"
+                                title={t('chatSidebar.deleteTitle')}
                             >
                                 🗑️
                             </button>
@@ -90,6 +99,15 @@ export default function ChatSidebar({ collapsed }: ChatSidebarProps) {
                     ))
                 )}
             </div>
+
+            <button
+                className="back-to-projects"
+                onClick={() => navigate('/projects')}
+                title={t('chatSidebar.backTitle')}
+            >
+                <span className="back-icon">📂</span>
+                <span className="back-text">{t('chatSidebar.backToProjects')}</span>
+            </button>
         </aside>
     );
 }
